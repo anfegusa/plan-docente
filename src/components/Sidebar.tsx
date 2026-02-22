@@ -1,6 +1,8 @@
 "use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { supabase } from "@/lib/supabase";
 
 const items = [
   { href: "/dashboard", label: "Dashboard", icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0v-4a1 1 0 011-1h2a1 1 0 011 1v4" },
@@ -14,6 +16,14 @@ const items = [
 
 export default function Sidebar() {
   const path = usePathname();
+  const [institucion, setInstitucion] = useState("Cargando...");
+
+  useEffect(() => {
+    supabase.from("parametros").select("institucion").single().then(({ data }) => {
+      if (data) setInstitucion(data.institucion);
+    });
+  }, []);
+
   return (
     <aside className="w-[210px] min-h-screen bg-[#1B2A4A] flex flex-col fixed left-0 top-0 z-50">
       {/* Logo */}
@@ -23,7 +33,7 @@ export default function Sidebar() {
         </div>
         <div>
           <div className="text-white font-bold text-[13px] leading-tight">Plan de Trabajo</div>
-          <div className="text-white/40 text-[10px]">Universidad XYZ</div>
+          <div className="text-white/40 text-[10px]">{institucion}</div>
         </div>
       </div>
       {/* Nav */}
