@@ -7,6 +7,16 @@ import toast from "react-hot-toast";
 
 const empty: Omit<Profesor, "id"> = { id_profesor: "", nombre: "", programa: "", perfil: "Plan Profesor", estado: "Activo", email: "" };
 
+function Field({ label, value, onChange, disabled }: { label: string; value: string; onChange: (v: string) => void; disabled?: boolean }) {
+  return (
+    <div className="mb-3.5">
+      <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-1">{label}</label>
+      <input value={value} onChange={e => onChange(e.target.value)} disabled={disabled}
+        className="w-full px-3 py-2 rounded-lg border border-gray-200 text-[13px] bg-gray-50 disabled:opacity-50" />
+    </div>
+  );
+}
+
 export default function Profesores() {
   const [list, setList] = useState<Profesor[]>([]);
   const [selId, setSelId] = useState<string | null>(null);
@@ -46,14 +56,6 @@ export default function Profesores() {
     setSelId(null); setForm({ ...empty });
     load();
   };
-
-  const Field = ({ label, field, disabled }: { label: string; field: string; disabled?: boolean }) => (
-    <div className="mb-3.5">
-      <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-1">{label}</label>
-      <input value={form[field] || ""} onChange={e => setForm({ ...form, [field]: e.target.value })} disabled={disabled}
-        className="w-full px-3 py-2 rounded-lg border border-gray-200 text-[13px] bg-gray-50 disabled:opacity-50" />
-    </div>
-  );
 
   return (
     <div>
@@ -99,9 +101,9 @@ export default function Profesores() {
               </button>
             </div>
           </div>
-          <Field label="ID Profesor" field="id_profesor" disabled={!isNew} />
-          <Field label="Nombre completo" field="nombre" />
-          <Field label="Programa académico" field="programa" />
+          <Field label="ID Profesor" value={form.id_profesor || ""} onChange={v => setForm({ ...form, id_profesor: v })} disabled={!isNew} />
+          <Field label="Nombre completo" value={form.nombre || ""} onChange={v => setForm({ ...form, nombre: v })} />
+          <Field label="Programa académico" value={form.programa || ""} onChange={v => setForm({ ...form, programa: v })} />
           <div className="flex gap-3.5">
             <div className="flex-1 mb-3.5">
               <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wide mb-1">Perfil</label>
@@ -118,9 +120,10 @@ export default function Profesores() {
               </select>
             </div>
           </div>
-          <Field label="Email" field="email" />
+          <Field label="Email" value={form.email || ""} onChange={v => setForm({ ...form, email: v })} />
         </div>
       </div>
     </div>
   );
 }
+
